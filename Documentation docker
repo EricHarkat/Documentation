@@ -2,3 +2,173 @@
 
 Ensemble des informations relative à docker et à son environnement
 
+##Commande linux
+
+#Creer un utilisateur
+Le -u sert à spécifier un id 
+
+```bash
+useradd -u 0000 nameUser 
+```
+
+#Voir les processsus, utiliser grep pour filter
+
+```bash
+ps aux | grep sleep
+```
+
+#Remplacer le propriétaire du fichier ou du répertoire
+
+```bash
+chown eric /myfile/
+```
+#Liste des fichiers ainsi que les fichiers cachés (ceux qui commence par un .) avec les details du style qui a créé le fichié etc
+
+```bash
+ls -la /myfile/
+```
+
+#Voir un utilisateur existe
+
+```bash
+id username
+```
+
+#Creer un fichier
+
+```bash
+touch filename
+```
+
+#Afficher les adresse IP du reseau (cela peut inclure les adresses d'autres Pheripherique)
+
+```bash
+ip addr ou ip a
+```
+
+#Quitter vim en sauvegardant
+échap pour passer un mode commande
+
+```bash
+:wq
+```
+
+#Quitter vim sans sauvegarder
+
+```bash
+:wq!
+```
+
+##Commandes docker
+
+#lancer un container docker
+L'argument -d implique l'utilsation du d'étache mode suivie de l'attribution du nom, de l'image et de la version
+
+```bash
+docker run -d --name c1 nginx:latest
+```
+#Demarrer un container 
+
+```bash
+docker start name/id
+```
+
+docker ps/ ps -a
+docker run -ti(terminal interactif) --rm(kill le container à la fin du processus) -name Eric debian:lastest
+docker rm name/id
+docker inspect name/id
+
+#docker volume
+(pour faire persister de la donnée ou de l'echanger entre container, le volume est un espace partager entre le container et l'host pour y stocker de la data)
+trois type de volume
+1 - mount bind
+2 - volume
+3 - tmpfs (repertoire de travail qui ne sera pas persistant, on perd les données lorsqu'on stop le container)
+
+#liste des volumes
+docker volume ls
+
+#creation d'un volume 
+docker volume create mynginx
+
+#attribution d'un volume version 1
+docker run -d --name c1 -v(association du volume) name:/usr/share/nginx/html(chemin où je souhaite monter mon volume) nginx:latest
+
+#attribution d'un volume version 2
+docker run -d --name c1 --mount type=bind,source=/data/(source sur le host que l'on va binder),destination=/usr/share/nginx/html nginx:latest
+docker run -d --name c1 --mount type=volume,source=mynginx,destination=/usr/share/nginx/html nginx:latest 
+docker run -d --name c1 --mount type=tmpfs,destination=/usr/share/nginx/html nginx:latest (pas de source car pas de persisitance)
+
+#rentrer à l'interieur du container docker 
+exec -ti c1 bash(commande que l'on souhaite activer dans notre docker exec)
+
+# voir les metadatas d'un element
+docker volume inspect mynginx ( a l'interieur de ce volume on va retrouver le Mountpoint "var/lib/docker/volumes/mynginx/_data equivalent de /usr/share/nginx/html mais sur le host en dehors du container)
+
+#trois type de volume
+1 - Bind Mount = monter un path personnalisé ex: /srv/data dans un repertoire target /data mais cette fois-ci a l'interieur du container
+2 - Volumes Docker = on creer un volume comme ci-dessus et on va monter un repertoire dans ce volume data persistante dans /var/lib/docker/volume/nameduvolume
+3 - TMPFS = espace de travail en memoire temporaire
+
+#docker file
+
+#voir toutes mes images
+docker images
+
+#image source que l'on souhaite utiliser
+FROM debian:9
+
+#lance des commande shell au moment du le creation de l'image
+RUN apt-get update -yq \
+&& apt-get install curl gnupg -yq \ apache2
+&& curl -sL https://deb.nodesource.com/setup_10.x | bash \
+&& apt-get install nodejs -yq \
+&& apt-get clean -y
+
+ADD . /app/
+WORKDIR /app
+RUN npm install
+
+EXPOSE 2368
+VOLUME /app/logs
+
+CMD npm run start
+
+#build une image
+docker build -t(pour attribuer un nom à l'image) myimage(monimage):v1.0(version attribué) .(pour symboliser le dockerfile
+
+#lancer une image (dockerfile)
+docker run -d --name c1 -v /myvolume/:/data/ myimage:v1.0
+
+#lancer une image dockerfile persistante
+docker run -d --name c1 -v /myvolume/:/data/ myimage:v1.0 sleep infinity(psersitance du container pour des test par exemple)
+
+#lancer une image dockerfile persistance avec un user
+
+docker run -d --name c1 -v /myvolume/:/data/ -u(user)name/id myimage:v1.0
+
+#reseaux docker (communication vers l'exterieur)
+par defaut quand on install docker on benficie d'un bridge qui s'appel docker 0, celui-ci fourni des IP aux containers et se reseaux par defaut repose par default sur le 172.17.0.1/16
+consultable par ipconfig ou ip a
+172.17.0.1 est la gateway/le bridge/le host, le premier conteneur aura l'adresse 172.17.0.2, le second 172.17.0.3
+#une autre maniere de retrouver le bridge directement depuis la commande docker
+docker network ls
+#une fois un container créé rentrer dans le conteneur 
+docker exec -ti c1 bash
+faire un apt update et un apt install iputils-ping net-tools
+ensuite faire if config et on peut voir que l'ip du conteneur est 172.17.0.2
+on peut meme pinguer le host ping 172.17.0.1 reseau local et vers l'exterieur ping 8.8.8.8
+
+#notion entre l'exposition et le publish
+Exposition de port ne reste qu'une metatdata ca ne veut pas dire que l'applicatif dans le containeur ecoute sur ce port. Il s'agit d'une simple declaration que l'on peut faire à la creation d'une image docker soit dans la ligne de commande docker run avec l'option --expose
+la publication de port est la capacité de mapper un port de notre machine host avec un port du container il peut se faire de deux maniere manuel avec -p soit de maniere dynamique et aleatoireavec le -P on parle publish all et cest dans le cas de cette alocation dynamqiue et aleatoire que le metadata de expose va etre utilisé.
+avec le -P on va pouvoir par exemple mapper le port 80 de notre container nginx par exemeple sur le port 8080 de l'host il s'agit la de publicatoin on peut immaginer aussi un contenaire avec un postgres qui fonctionne sur le port 5432 à le publier sur le port 5432 de notre host.
+on peut publier plusieur mapping dans le docker run voir meme un rang de port.
+pour le publish all cest a dire le mode aleatoire il va se baser sur le Expose du dockerfile ou lors du docker run aavec l'option --expose et le numero du port à l'interieur du container et les port sur l'host seront superieur a 32000
+
+docker run -d --name c1 -p 8080:80(mappingentre8080du host et le 80 du contziner) nginx
+pour voir si on ecoute bien sur le port 8080 ouvrir un nouveau terminal et faire une requete curl sur l ip de l'host au port 80
+
+docker run -d --name c2 -P nginx 
+en fait docker ps on peut voir que le port qui est exposé est au dessus de 32000
+
