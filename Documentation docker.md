@@ -89,7 +89,7 @@ l'argument --rm kil le docker à la fin du processus
 ```bash
 docker run -ti --rm -name Eric debian:lastest
 ```
-#supprimer un container
+## supprimer un container
 
 ```bash
 docker rm name/id
