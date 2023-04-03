@@ -5,7 +5,7 @@ Ensemble des informations relative à docker et à son environnement
 ## Commande linux
 
 ## Creer un utilisateur
-Le -u sert à spécifier un id 
+Le -u sert à spécifier un id sinon il sera choisi automatiquement
 
 ```bash
 useradd -u 0000 nameUser 
@@ -57,6 +57,12 @@ ip addr ou ip a
 
 ```bash
 :wq!
+```
+
+## Librairie pour controler le trafic reseau
+
+```bash
+apt instal iproute2
 ```
 
 # Commandes docker
@@ -277,7 +283,7 @@ on peut immaginer aussi un contenaire avec un postgres qui fonctionne sur le por
 On peut publier plusieur mapping dans le docker run voir meme un rang de port.
 Pour le publish all cest à dire le mode aleatoire il va se baser sur le Expose du dockerfile ou lors du docker run avec l'option --expose et le numero du port à l'interieur du container et les port sur l'host seront superieur à 32000
 
-# publish manuel
+## publish manuel
 Mapping entre le port 8080 du host et le 80 du container
 
 ```bash
@@ -303,4 +309,154 @@ On peut voir que le port qui est exposé est au dessus de 32000
 
 ```bash
 docker ps
+```
+
+## Network cli
+Les containers n'ont pas d'adresse ip static, donc si on stop ou detruit un container on est pas certain de récuperer la meme ip. 
+
+## Voir les reseaux 
+
+```bash
+docker network ls
+```
+
+## Creer un reseau
+
+```bash
+docker network create --driver=bridge --subnet=192.168.0.0/24 networkname
+```
+
+## Inspecter le reseau créé
+
+```bash
+docker network inspect networkname
+```
+
+## Inspecter le bridge
+
+```bash
+docker network inspect bridge docker
+```
+
+## Creer un docker connecté a un reseau 
+
+```bash
+docker run -d --name c1 --network networkname nginx:latest
+```
+
+on créer un deuxieme docker sur le meme reseau pour tester le reseau
+
+```bash
+docker run -d --name c2 --network networkname nginx:latest
+```
+
+on rentre à l'interieur du container, on le met à jour, on install l'utilitaire de ping, et on ping
+```bash
+exec -ti c2 bash
+apt update
+apt install iputils-ping
+ping c2
+```
+
+Ce qui n'est pas possible de faire avec le docker0 car il ne dispose pas de cette resolution, qui est uniquement disponible sur les reseaux custome.
+
+## Rattacher un container à un reseau si il n'a pas été declaré au debut
+
+```bash
+docker network connect networkname containername
+```
+
+il est possible reconfirgurer le bridge docker0, par exemple si le reseau dans l'entreprise utilise deja le range ip du bridge docker0
+
+# Changer le range ip du docker0
+
+```bash
+vim /etc/docker/daemon.json
+```
+
+à l'interieur du fichier ecrire
+{
+	"bip": "10.10.0.1/16" par exemple
+}
+
+## Redemarrer docker et vérifier si le bridge à changé
+
+```bash
+systemctl restart docker
+ifconfig docker0
+```
+
+## Modifier le bridge par default ("com.docker.network.bridge.name": "docker0")
+
+## Notion de vethernet
+Le vethernet est un cable virtuel pour relier deux port.
+
+## Network namespace reseau (isolation reseau au seing du host)
+
+```bash
+create network namespace
+```
+
+## Lister les nameSpace
+
+```bash
+ip netns ls
+```
+
+# Ajouter le namespace
+
+```bash
+ip netns add namenameSpace
+```
+
+## Commande ls mais dans le contexte de mon namespace reseau
+
+```bash
+ip netns exec namenamespace ls
+```
+
+## Monter un serveur web
+-m signifie module http.server est une module qui lance un serverweb à l'endroit ou on lance la commande en question.
+
+```bash
+ip netns exec namenamespace python3 -m http.server 8000
+```
+
+## Tester le port 8080 du namespace
+
+```bash
+ip netns exec mynet curl 127.0.0.1:8080
+```
+
+## Reseau du namespace
+
+```bash
+ip netns exec mynet ip a
+```
+
+## Mettre la backloop up
+
+```bash
+ip netns exec namenamespace ip link set lo up
+```
+
+## Variable d'environement 
+passer une variable en ligne de commande 
+
+```bash
+docker run -tid --name dockername --env VARIABLENAME ="xxxx" ubuntu:latest
+```
+
+## Passer un fichier de variable 
+on peut creer un fichier vim vars_env.lst ou on rentre des mot de passe ou autre
+
+```bash
+docker run -tid --name dockername --env-file vars_env.lst ubuntu:latest
+```
+
+## Voir les variables
+
+```bash
+docker exec -ti testenv sh
+env
 ```
