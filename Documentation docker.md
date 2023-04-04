@@ -171,8 +171,9 @@ A l'interieur de ce volume on pourra retrouver le Mountpoint var/lib/docker/volu
 docker volume inspect volumename 
 ```
 
-# Docker file
+## Introduction Dockerfile
 
+```bash
 #Image source que l'on souhaite utiliser
 FROM debian:9
 
@@ -191,6 +192,7 @@ EXPOSE 2368
 VOLUME /app/logs
 
 CMD npm run start
+```
 
 #Build une image à partir du dockerfile
 L'argument -t pour attribuer un nom à l'image suivie de la version attribué (ex:1.0) le point est pour la symboliser le dockerfile
@@ -460,3 +462,25 @@ docker run -tid --name dockername --env-file vars_env.lst ubuntu:latest
 docker exec -ti testenv sh
 env
 ```
+
+#Dokerfile
+
+C'est quoi un dockerfile :
+	Un fichier plat de configuration
+	Sont objectif : creer une image
+	On y retrouve une sequence d'instruction
+			FROM : de où on part
+			RUN : lancements de commandes (apt...)
+			ENV : definir les variables d'environement
+			EXPOSE : exposer le port du container
+			VOLUME : définir des volumes
+			COPY : copier des elements entre le host docker et le container
+			ENTRYPOINT : definir le processus maitre du container (l'idée dans un container c'est d'avoir un seul processu qui tourne)
+	
+L'interet du dockerfile:
+	relance a creation d'image à tout moment
+	meilleur visibilité sur ce qui est fait (toutes les etapes de la detaillés)
+	partage facile et possibilité de gitter
+	script d'edition de docker file (variable...)
+	ne pas se poser de question lors du docker run du container
+
