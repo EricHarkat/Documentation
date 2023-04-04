@@ -463,26 +463,27 @@ docker exec -ti testenv sh
 env
 ```
 
-# Dokerfile
+# Dockerfile
 
 C'est quoi un dockerfile :
-	* Un fichier plat de configuration
-	* Sont objectif : creer une image
-	* On y retrouve une sequence d'instruction
-			```bash
-			FROM : de où on part
-			RUN : lancements de commandes (apt...)
-			ENV : definir les variables d'environement
-			EXPOSE : exposer le port du container
-			VOLUME : définir des volumes
-			COPY : copier des elements entre le host docker et le container
-			ENTRYPOINT : definir le processus maitre du container (l'idée dans un container c'est d'avoir un seul processu qui tourne)
-			```
-	
+* Un fichier plat de configuration
+* Sont objectif : creer une image
+* On y retrouve une sequence d'instruction
+
+```bash
+FROM : de où on part
+RUN : lancements de commandes (apt...)
+ENV : definir les variables d'environement
+EXPOSE : exposer le port du container
+VOLUME : définir des volumes
+COPY : copier des elements entre le host docker et le container
+ENTRYPOINT : definir le processus maitre du container (l'idée dans un container c'est d'avoir un seul processus qui tourne)
+```
+				
 L'interet du dockerfile:
-	* relance a creation d'image à tout moment
-	* meilleur visibilité sur ce qui est fait (toutes les etapes de la detaillés)
-	* partage facile et possibilité de gitter
-	* script d'edition de docker file (variable...)
-	* ne pas se poser de question lors du docker run du container
+* relance la creation d'image à tout moment
+* meilleur visibilité sur ce qui est fait (toutes les etapes de la création detaillés)
+* partage facile et possibilité de gitter
+* script d'edition de docker file (variable...)
+* ne pas se poser de question lors du docker run du container
 
