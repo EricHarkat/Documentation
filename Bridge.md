@@ -6,4 +6,4 @@
 
 /!\ import il ne doit pas avoir Docker d'installer pour faire cette manipulation par risque de conflit.
 
-
+![Schema](relative/path/to/img.jpg?raw=true "Title")
