@@ -4,142 +4,142 @@ Ensemble des informations relative à docker et à son environnement
 
 ## Commande linux
 
-## Creer un utilisateur
+### Creer un utilisateur
 Le -u sert à spécifier un id sinon il sera choisi automatiquement
 
 ```bash
 useradd -u 0000 nameUser 
 ```
 
-## Voir les processsus, utiliser grep pour filter
+### Voir les processsus, utiliser grep pour filter
 
 ```bash
 ps aux | grep sleep
 ```
 
-## Remplacer le propriétaire du fichier ou du répertoire
+### Remplacer le propriétaire du fichier ou du répertoire
 
 ```bash
 chown eric /myfile/
 ```
-## Liste des fichiers ainsi que les fichiers cachés (ceux qui commence par un .) avec les details du style qui a créé le fichié etc
+### Liste des fichiers ainsi que les fichiers cachés (ceux qui commence par un .) avec les details du style qui a créé le fichié etc
 
 ```bash
 ls -la /myfile/
 ```
 
-## Voir un utilisateur existe
+### Voir si un utilisateur existe
 
 ```bash
 id username
 ```
 
-## Creer un fichier
+### Creer un fichier
 
 ```bash
 touch filename
 ```
 
-## Afficher les adresse IP du reseau (cela peut inclure les adresses d'autres Pheripherique)
+### Afficher les adresse IP du reseau (cela peut inclure les adresses d'autres Pheripherique)
 
 ```bash
 ip addr ou ip a
 ```
 
-## Quitter vim en sauvegardant
+### Quitter vim en sauvegardant
 échap pour passer un mode commande
 
 ```bash
 :wq
 ```
 
-## Quitter vim sans sauvegarder
+### Quitter vim sans sauvegarder
 
 ```bash
 :wq!
 ```
 
-## Librairie pour controler le trafic reseau
+### Librairie pour controler le trafic reseau
 
 ```bash
 apt instal iproute2
 ```
 
-# Commandes docker
+## Commandes docker
 
-## lancer un container docker
+### lancer un container docker
 L'argument -d implique l'utilsation du d'étache mode, l'arguement -ti implique le terminal interactif suivie de l'attribution du nom, de l'image et de la version
 
 ```bash
 docker run -d -ti --name c1 nginx:latest
 ```
-## Demarrer un container 
+### Demarrer un container 
 
 ```bash
 docker start name/id
 ```
-## Liste des container actif
+### Liste des container actif
 
 ```bash
 docker ps
 ```
-## Liste des container actif/non actif
+### Liste des container actif/non actif
 
 ```bash
 docker ps -a
 ```
 
-## Kill un containeur à la fin du processus
+### Kill un containeur à la fin du processus
 l'argument --rm kil le docker à la fin du processus
 
 ```bash
 docker run -ti --rm -name Eric debian:lastest
 ```
-## supprimer un container
+### supprimer un container
 
 ```bash
 docker rm name/id
 ```
 
-## Inspecter un container
+### Inspecter un container
 
 ```bash
 docker inspect name/id
 ```
 
-## Voir toutes mes images
+### Voir toutes mes images
 
 ```bash
 docker images
 ```
 
-# Docker volume
+## Docker volume
 Pour faire persister de la donnée ou l'echanger entre container, le volume est un espace partagé entre le container et l'host pour y stocker de la data.
 Trois type de volume
 1 - Bind Mount = monter un path personnalisé ex: /srv/data dans un repertoire target /data mais cette fois-ci a l'interieur du container
 2 - Volumes Docker = on creer un volume comme ci-dessus et on va monter un repertoire dans ce volume data persistante dans /var/lib/docker/volume/nameduvolume
 3 - TMPFS = espace de travail en memoire temporaire
 
-## Liste des volumes
+### Liste des volumes
 
 ```bash
 docker volume ls
 ```
 
-## Creation d'un volume 
+### Creation d'un volume 
 
 ```bash
 docker volume create volumename
 ```
 
-## Attribution d'un volume version 1
+### Attribution d'un volume version 1
 L'argument -v permet d'associer un volume existant suivie du path où on souhaite le monter
 
 ```bash
 docker run -d --name c1 -v name:/usr/share/nginx/html nginx:latest
 ```
 
-## Attribution d'un volume version 2
+### Attribution d'un volume version 2
 Methode avec le mount bind, la source est l'emplacement sur le host que l'on va binder à la destination 
 
 ```bash
@@ -164,7 +164,7 @@ Le dernier argument est la commande que l'on souhaite activer dans notre docker 
 exec -ti c1 bash
 ```
 
-## Voir les metadatas d'un element
+### Voir les metadatas d'un element
 A l'interieur de ce volume on pourra retrouver le Mountpoint var/lib/docker/volumes/volumename/_data equivalent de /usr/share/name/html mais sur le host en dehors du container
 
 ```bash
@@ -194,14 +194,14 @@ VOLUME /app/logs
 CMD npm run start
 ```
 
-#Build une image à partir du dockerfile
+### Build une image à partir du dockerfile
 L'argument -t pour attribuer un nom à l'image suivie de la version attribué (ex:1.0) le point est pour la symboliser le dockerfile
 
 ```bash
 docker build -t imagename:versionnumber .
 ```
 
-## Lancer une image (dockerfile)
+### Lancer une image (dockerfile)
 Le derniere argument est le nom est la version de l'image creer à partir du dockerfile
 
 ```bash
@@ -209,14 +209,14 @@ docker run -d --name c1 -v /myvolume/:/data/ imagename:versionnumber
 ```
 
 
-## Lancer une image dockerfile persistante
+### Lancer une image dockerfile persistante
 L'arguement sleep infinity pour faire persister le container pour des tests ou autre
 
 ```bash
 docker run -d --name c1 -v /myvolume/:/data/ myimage:v1.0 sleep infinity
 ```
 
-## Lancer une image dockerfile persistance avec un user
+### Lancer une image dockerfile persistance avec un user
 L'argument -u pour lancer un container avec un utilsateur ce qui permet de ne pas creer un container en root, 
 mais attention à déclarer dans le dockerfile le nom de l'utlisateur avec lequel le container pourra etre lancé. 
 Afin qu'il y ai un lien entre le user de l'host et celui du container. Il s'agit d'une question de permission de l'ecture ecriture à l'interieur du container
@@ -238,7 +238,7 @@ ip a
 
 172.17.0.1 est la gateway/le bridge/le host, le premier conteneur aura l'adresse 172.17.0.2, le second 172.17.0.3, etc..
 
-## Une autre maniere de retrouver le bridge directement depuis la commande docker
+### Une autre maniere de retrouver le bridge directement depuis la commande docker
 
 ```bash
 docker network ls
@@ -253,14 +253,14 @@ apt update
 ```bash
 apt install iputils-ping net-tools
 ```
-## Controle de l'p du container
+### Controle de l'ip du container
 On pourra voir que l'ip du container commence par 172.17.0.x
 
 ```bash
 ifconfig
 ```
 
-## Teste du bridge
+### Teste du bridge
 On peut pinguer le host et google pour l'acces exterieur
 
 ```bash
@@ -285,14 +285,14 @@ on peut immaginer aussi un contenaire avec un postgres qui fonctionne sur le por
 On peut publier plusieur mapping dans le docker run voir meme un rang de port.
 Pour le publish all cest à dire le mode aleatoire il va se baser sur le Expose du dockerfile ou lors du docker run avec l'option --expose et le numero du port à l'interieur du container et les port sur l'host seront superieur à 32000
 
-## publish manuel
+### publish manuel
 Mapping entre le port 8080 du host et le 80 du container
 
 ```bash
 docker run -d --name c1 -p 8080:80 nginx
 ```
 
-## Voir si on ecoute bien sur le port 8080
+### Voir si on ecoute bien sur le port 8080
 
 ```bash
 curl ip:80
@@ -300,13 +300,13 @@ curl ip:80
 docker run -d --name c1 -p 8080:80(mappingentre8080du host et le 80 du contziner) nginx
 pour voir si on ecoute bien sur le port 8080 ouvrir un nouveau terminal et faire une requete curl sur l ip de l'host au port 80
 
-## publish dynamique
+### publish dynamique
 
 ```bash
 docker run -d --name c2 -P nginx 
 ```
 
-## Voir le port exposé
+### Voir le port exposé
 On peut voir que le port qui est exposé est au dessus de 32000
 
 ```bash
@@ -316,31 +316,31 @@ docker ps
 ## Network cli
 Les containers n'ont pas d'adresse ip static, donc si on stop ou detruit un container on est pas certain de récuperer la meme ip. 
 
-## Voir les reseaux 
+### Voir les reseaux 
 
 ```bash
 docker network ls
 ```
 
-## Creer un reseau
+### Creer un reseau
 
 ```bash
 docker network create --driver=bridge --subnet=192.168.0.0/24 networkname
 ```
 
-## Inspecter le reseau créé
+### Inspecter le reseau créé
 
 ```bash
 docker network inspect networkname
 ```
 
-## Inspecter le bridge
+### Inspecter le bridge
 
 ```bash
 docker network inspect bridge docker
 ```
 
-## Creer un docker connecté a un reseau 
+### Creer un docker connecté a un reseau 
 
 ```bash
 docker run -d --name c1 --network networkname nginx:latest
@@ -362,7 +362,7 @@ ping c2
 
 Ce qui n'est pas possible de faire avec le docker0 car il ne dispose pas de cette resolution, qui est uniquement disponible sur les reseaux custome.
 
-## Rattacher un container à un reseau si il n'a pas été declaré au debut
+### Rattacher un container à un reseau si il n'a pas été declaré au debut
 
 ```bash
 docker network connect networkname containername
@@ -388,9 +388,9 @@ systemctl restart docker
 ifconfig docker0
 ```
 
-## Modifier le bridge par default ("com.docker.network.bridge.name": "docker0")
+### Modifier le bridge par default ("com.docker.network.bridge.name": "docker0")
 
-## Notion de vethernet
+### Notion de vethernet
 Le vethernet est un cable virtuel pour relier deux port.
 
 ## Network namespace reseau (isolation reseau au seing du host)
@@ -399,44 +399,44 @@ Le vethernet est un cable virtuel pour relier deux port.
 create network namespace
 ```
 
-## Lister les nameSpace
+### Lister les nameSpace
 
 ```bash
 ip netns ls
 ```
 
-# Ajouter le namespace
+### Ajouter le namespace
 
 ```bash
 ip netns add namenameSpace
 ```
 
-## Commande ls mais dans le contexte de mon namespace reseau
+### Commande ls mais dans le contexte de mon namespace reseau
 
 ```bash
 ip netns exec namenamespace ls
 ```
 
-## Monter un serveur web
+### Monter un serveur web
 -m signifie module http.server est une module qui lance un serverweb à l'endroit ou on lance la commande en question.
 
 ```bash
 ip netns exec namenamespace python3 -m http.server 8000
 ```
 
-## Tester le port 8080 du namespace
+### Tester le port 8080 du namespace
 
 ```bash
 ip netns exec mynet curl 127.0.0.1:8080
 ```
 
-## Reseau du namespace
+### Reseau du namespace
 
 ```bash
 ip netns exec mynet ip a
 ```
 
-## Mettre la backloop up
+### Mettre la backloop up
 
 ```bash
 ip netns exec namenamespace ip link set lo up
@@ -449,21 +449,21 @@ passer une variable en ligne de commande
 docker run -tid --name dockername --env VARIABLENAME ="xxxx" ubuntu:latest
 ```
 
-## Passer un fichier de variable 
+### Passer un fichier de variable 
 on peut creer un fichier vim vars_env.lst ou on rentre des mot de passe ou autre
 
 ```bash
 docker run -tid --name dockername --env-file vars_env.lst ubuntu:latest
 ```
 
-## Voir les variables
+### Voir les variables
 
 ```bash
 docker exec -ti testenv sh
 env
 ```
 
-#Dokerfile
+# Dokerfile
 
 C'est quoi un dockerfile :
 	Un fichier plat de configuration
