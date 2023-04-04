@@ -145,17 +145,57 @@ A l'interieur de ce volume on pourra retrouver le Mountpoint var/lib/docker/volu
 docker volume inspect volumename 
 ```
 
-## Introduction Dockerfile
-```bash
-#Image source que l'on souhaite utiliser
-FROM debian:9
+## Dockerfile
 
-#lance des commande shell au moment du le creation de l'image
+C'est quoi un dockerfile :
+* Un fichier plat de configuration
+* Sont objectif : creer une image
+* On y retrouve une sequence d'instruction
+
+C'est quoi un dockerfile :
+* Un fichier plat de configuration
+* Sont objectif : creer une image
+* On y retrouve une sequence d'instruction
+
+```bash
+FROM : de où on part
+RUN : lancements de commandes (apt...)
+ENV : definir les variables d'environement
+EXPOSE : exposer le port du container
+VOLUME : définir des volumes
+COPY : copier des elements entre le host docker et le container
+ENTRYPOINT : definir le processus maitre du container (l'idée dans un container c'est d'avoir un seul processus qui tourne)
+```
+
+L'interet du dockerfile:
+* relance la creation d'image à tout moment
+* meilleur visibilité sur ce qui est fait (toutes les etapes de la création detaillés)
+* partage facile et possibilité de gitter
+* script d'edition de docker file (variable...)
+* ne pas se poser de question lors du docker run du container
+* création images pod // dev - CI // CD
+
+### Exemple DockerFile
+```bash
+FROM ubuntu:latest
+MAINTAINER eric
+RUN apt-get update\
+&& apt-get install -y vim git \
+## nettoyer le cash 
+## supprimer les residus suite à l'apt-get
+&& apt-get clean \
+&& rm -rf /var/lib/apt/listes/* /tmp/* /var/tmp/*
+```
+
+
+```bash
+FROM debian:9
 RUN apt-get update -yq \
 && apt-get install curl gnupg -yq \ apache2
 && curl -sL https://deb.nodesource.com/setup_10.x | bash \
 && apt-get install nodejs -yq \
 && apt-get clean -y
+&& rm -rf /var/lib/apt/listes/* /tmp/* /var/tmp/*
 
 ADD . /app/
 WORKDIR /app
@@ -403,27 +443,4 @@ docker exec -ti testenv sh
 env
 ```
 
-# Dockerfile
-
-C'est quoi un dockerfile :
-* Un fichier plat de configuration
-* Sont objectif : creer une image
-* On y retrouve une sequence d'instruction
-
-```bash
-FROM : de où on part
-RUN : lancements de commandes (apt...)
-ENV : definir les variables d'environement
-EXPOSE : exposer le port du container
-VOLUME : définir des volumes
-COPY : copier des elements entre le host docker et le container
-ENTRYPOINT : definir le processus maitre du container (l'idée dans un container c'est d'avoir un seul processus qui tourne)
-```
-				
-L'interet du dockerfile:
-* relance la creation d'image à tout moment
-* meilleur visibilité sur ce qui est fait (toutes les etapes de la création detaillés)
-* partage facile et possibilité de gitter
-* script d'edition de docker file (variable...)
-* ne pas se poser de question lors du docker run du container
 
