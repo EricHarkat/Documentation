@@ -182,8 +182,8 @@ MAINTAINER eric
 RUN apt-get update\
 && apt-get install -y vim git \
 ## nettoyer le cash 
-## supprimer les residus suite à l'apt-get
 && apt-get clean \
+## supprimer les residus suite à l'apt-get
 && rm -rf /var/lib/apt/listes/* /tmp/* /var/tmp/*
 ```
 
@@ -233,6 +233,12 @@ Afin qu'il y ai un lien entre le user de l'host et celui du container. Il s'agit
 ```bash
 docker run -d --name c1 -v /myvolume/:/data/ -u name/id myimage:v1.0
 ```
+
+### Supprimer une image
+```bash
+docker rmi imagename/id
+```
+
 
 ## Reseaux docker (communication vers l'exterieur)
 Par defaut quand on install docker on benficie d'un bridge qui s'appel docker 0, celui-ci fourni des IP aux containers et Le reseaux par defaut repose par default sur le 172.17.0.1/16
