@@ -198,7 +198,7 @@ CMD npm run start
 L'argument -t pour attribuer un nom à l'image suivie de la version attribué (ex:1.0) le point est pour la symboliser le dockerfile
 
 ```bash
-docker build -t imagename:versionnumner .
+docker build -t imagename:versionnumber .
 ```
 
 ## Lancer une image (dockerfile)
