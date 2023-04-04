@@ -52,7 +52,7 @@ ip addr ou ip a
 
 ### Librairie pour controler le trafic reseau
 ```bash
-apt instal iproute2
+apt install iproute2
 ```
 
 ## Commandes docker
