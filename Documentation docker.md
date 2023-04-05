@@ -449,4 +449,36 @@ docker exec -ti testenv sh
 env
 ```
 
+## Comprendre les layers 
+Il existe deux type de couches sur docker:
+* lecture seule
+* lecture - ecriture (mode container qui permet d'avoir un systeme pour travailler à l'interieur du container)
+La plupart des couches sont en lecture seule. autre subtilité les image puevent se partager des couches exemple un container avec un image debian et un container ubuntu peuevent avoir une couche commune pour demarrer plus rapidement par exemple.
+Sur l'ensemble des couches empilées la derniere est la couche de travail celle ou on passe en mode container et donc c'est des couches en lecture et ecriture.
 
+### Dockerfile multi-couche
+```bash
+FROM ubuntu:latest
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends vim
+RUN apt-get install -y --no-install-recommends git
+```
+Dans ce dockerfile le nombre de RUN fait référence au nombre de couches.
+
+### Voir les couches
+```bash
+docker history nameimage:version
+```
+cette comment permet de visualiser le contenu d'une image et par definiton les couches.
+
+## Consulter la couche en mode écriture
+```bash
+docker diff test
+```
+docker enregistre les differences l'image standart et tout ce qu'on va y faire dessus puisse qu'on y est en mode container.
+
+## Pour creer une image à partir d'un container 
+```bash
+docker commit -m "création d'une image" imagename -t imagename:version
+```
+Ca ressemble beaucoup à un commit de git et en fait ce qui va se passer c'est que ca va juste commmiter les modifications qu'on a realiser sur notre image precedente.
