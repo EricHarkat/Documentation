@@ -37,7 +37,7 @@ ENTRYPOINT ["./rollon.sh"]
 Deux scripts tournent sur les workers rollon.sh pour la variable calculé et un script php affichage.php pour mettre à jour la page index.html.
 On les COPy à la creation de l'image, et a chaque creation d'image on dira que le process à lancer c'est rollon.sh.
 
-### Script rollon.sh
+### Script rollon.sh worker 1
 ```bash
 #!/bin/bash
 x=1
@@ -47,6 +47,17 @@ echo $x > /var/www/html/worker1.txt
 ((x=x+100))
 php /affichage.php
 sleep 10
+done
+```
+### Script rollon.sh worker 2
+```bash#!/bin/bash
+x=1
+while true
+do
+echo $x > /var/www/html/worker2.txt
+((x=x+1))
+sleep 5
+php /affichage.php
 done
 ```
 Sur le volume partagé on va avoir un index html mais ca c'est dédié au serveur web. Pour les workers vont modifier une variable qui va etre modifié et placé dans placé dans un
@@ -60,4 +71,45 @@ $file2='/var/www/html/worker2.txt';
 $Data1="";
 $Data2="";
 
+# worker1 data
+if (file_exists($file1)) {
+$fh = fopen($file1,'r');
+while ($line = fgets($fh)) {
+  $worker1 = $line;
+}
+fclose($fh);
+}
+
+
+# worker2 data
+if (file_exists($file2)) {
+$fh = fopen($file2,'r');
+while ($line = fgets($fh)) {
+  $worker2 = $line;
+}
+fclose($fh);
+}
+
+# affichage
+$File = "/var/www/html/index.html";
+$Handle = fopen($File, 'w');
+$Data1 = "worker 1 vaut ".$worker1."\n";
+fwrite($Handle, $Data1);
+$Data2 = "worker 2 vaut ".$worker2."\n";
+fwrite($Handle, $Data2);
+fclose($Handle);
+?>
 #
+
+### Arborescence
+myapp
+*serveurweb
+**Dockerfile
+*worker1
+**affichage.php
+**Dockerfile
+**rollon.sh
+*worker2
+**affichage.php
+**Dockerfile
+**rollon.sh
