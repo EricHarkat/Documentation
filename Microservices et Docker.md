@@ -99,17 +99,17 @@ $Data2 = "worker 2 vaut ".$worker2."\n";
 fwrite($Handle, $Data2);
 fclose($Handle);
 ?>
-#
+```
 
 ### Arborescence
 myapp
 * serveurweb
- + Dockerfile
+- - Dockerfile
 * worker1
- + affichage.php
- + Dockerfile
- + rollon.sh
+- - affichage.php
+- - Dockerfile
+- rollon.sh
 * worker2
- + affichage.php
- + Dockerfile
- + rollon.sh
+- - affichage.php
+- - Dockerfile
+- - rollon.sh
