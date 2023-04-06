@@ -1,6 +1,51 @@
 # Docker
 
-Ensemble des informations relative à docker et à son environnement
+Ensemble des informations relative à docker et à son environnement.
+
+Lorsque vous installez Docker sur une machine. Deux programmes différents entrent en jeu :
+
+- Client Docker
+- Serveur Docker
+- 
+Docker Server reçoit des commandes via un socket (soit via un réseau, soit via un "fichier")
+
+Le client Docker communique sur un réseau et envoie un message au serveur Docker pour dire créer un conteneur, démarrer un conteneur, arrêter un conteneur, etc.
+
+Lorsque le client et le serveur s'exécutent sur le même ordinateur, ils peuvent se connecter via un fichier spécial appelé socket. Et comme ils peuvent communiquer via un fichier et que Docker peut partager efficacement des fichiers entre des hôtes et des conteneurs, cela signifie que vous pouvez exécuter le client dans Docker lui-même.
+
+## Installation
+
+### Desintallation des vieilles versions de docker 
+```bash
+sudo apt update
+sudo apt remove docker docker-engine docker.io 2>/dev/null
+```
+### Mettre à jour les paquets
+```bash
+sudo apt update
+```
+### Installer les paquets
+```bash
+sudo apt -y install lsb-release gnupg apt-transport-https ca-certificates curl software-properties-common
+```
+### Ajouetr les GPG key officiel de docker
+```bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker.gpg
+```
+### Ajouter le repository stable
+```bash
+sudo add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+```
+### Installation de docker ce
+```bash
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+### Si vous souhaitez utiliser docker avec un utilisateur non root, ajoutez un utilisateur au group docker
+```bash
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
 
 ## Commande linux
 
