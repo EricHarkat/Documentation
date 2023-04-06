@@ -103,13 +103,13 @@ fclose($Handle);
 
 ### Arborescence
 myapp
-* serveurweb
+- serveurweb
 - - Dockerfile
-* worker1
+- worker1
 - - affichage.php
 - - Dockerfile
-- rollon.sh
-* worker2
+- - rollon.sh
+- worker2
 - - affichage.php
 - - Dockerfile
 - - rollon.sh
