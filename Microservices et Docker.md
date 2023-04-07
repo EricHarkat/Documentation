@@ -60,7 +60,7 @@ sleep 5
 php /affichage.php
 done
 ```
-Sur le volume partagé on va avoir un index html mais ca c'est dédié au serveur web. Pour les workers vont modifier une variable qui va etre modifié et placé dans placé dans un
+Sur le volume partagé on va avoir un index html mais ca c'est dédié au serveur web. Pour les workers vont modifier une variable qui va etre modifié et placé dans un
 fichié worker1, worker2.txt.
 
 ### Script affichage.php
@@ -113,3 +113,8 @@ myapp
 - - affichage.php
 - - Dockerfile
 - - rollon.sh
+
+
+## Conclusion
+Seul le serveurweb a une ouverture sur le port 80 en termes d'écoute, les autres container n'ont pas de port d'ecoute leur maniere de partager se fait à travers le volume partager qui est fait entre les differents container.
+LA Commande --volume-from permet de rattacher les deux workers au volume monté sur le container site. On peut donc faire des liens entre container par les volumes à partir du simple nom du container que l'on veut taper.
