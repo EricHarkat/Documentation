@@ -124,7 +124,10 @@ docker ps
 ```bash
 docker ps -a
 ```
-
+### Liste des container actif/non actif (list uniquement les id)
+```bash
+docker ps -aq
+```
 ### Kill un containeur à la fin du processus
 l'argument --rm kil le docker à la fin du processus
 ```bash
