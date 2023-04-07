@@ -49,6 +49,11 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 ## Commande linux
 
+### Afficher le chemin d'accès vers le répertoire où se situe l'utilisateur
+```bash
+pwd 
+```
+
 ### Creer un utilisateur
 Le -u sert à spécifier un id sinon il sera choisi automatiquement
 ```bash
@@ -64,6 +69,7 @@ ps aux | grep sleep
 ```bash
 chown eric /myfile/
 ```
+
 ### Liste des fichiers ainsi que les fichiers cachés (ceux qui commence par un .) avec les details du style qui a créé le fichié etc
 ```bash
 ls -la /myfile/
@@ -112,6 +118,7 @@ L'argument -d implique l'utilsation du d'étache mode, l'arguement -ti implique 
 ```bash
 docker run -d -ti --name c1 nginx:latest
 ```
+
 ### Demarrer un container 
 ```bash
 docker start name/id
@@ -120,24 +127,29 @@ docker start name/id
 ```bash
 docker ps
 ```
+
 ### Liste des container actif/non actif
 ```bash
 docker ps -a
 ```
+
 ### Liste des container actif/non actif (list uniquement les id)
 ```bash
 docker ps -aq
 ```
+
 ### Lister les container actif/non actif avec juste les informations id et name
 je boucle dans docker ps -aq est je remonte les containeurs avec leur id et nom.
 ```bash
 for id in $(docker ps -aq); do docker inspect -f "{{.Name}} -- {{.NetworkingSettings.IPAddress}}" $id;done
 ```
+
 ### Kill un containeur à la fin du processus
 l'argument --rm kil le docker à la fin du processus
 ```bash
 docker run -ti --rm -name Eric debian:lastest
 ```
+
 ### supprimer un container
 ```bash
 docker rm name/id
