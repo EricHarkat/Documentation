@@ -100,6 +100,11 @@ ip addr ou ip a
 apt install iproute2
 ```
 
+### lister les ports ouverts
+```bash
+nmap -PM ipadress
+```
+
 ## Commandes docker
 
 ### lancer un container docker
