@@ -128,6 +128,11 @@ docker ps -a
 ```bash
 docker ps -aq
 ```
+### Lister les container actif/non actif avec juste les informations id et name
+je boucle dans docker ps -aq est je remonte les containeurs avec leur id et nom.
+```bash
+for id in $(docker ps -aq); do docker inspect -f "{{.Name}} -- {{.NetworkingSettings.IPAddress}}" $id;done
+```
 ### Kill un containeur à la fin du processus
 l'argument --rm kil le docker à la fin du processus
 ```bash
